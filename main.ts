@@ -1,10 +1,9 @@
-Deno.serve((req: Request) => {
+Deno.serve((req: Request): Response | Promise<Response> => {
   const url = new URL(req.url);
 
-  // UUID خودت رو اینجا تغییر بده (از uuidgenerator.net بگیر)
-  const uuid = "51c18d3e-7513-488b-b168-de11dd5937f1"; // این رو عوض کن
+  // UUID رو اینجا تغییر بده
+  const uuid = "51c18d3e-7513-488b-b168-de11dd5937f1"; // عوض کن
 
-  // مسیر دلخواه (می‌تونی تغییر بدی)
   const path = "/vless";
 
   if (url.pathname === path) {
@@ -12,8 +11,8 @@ Deno.serve((req: Request) => {
     return new Response(config, { status: 200 });
   }
 
-  // پروکسی ترافیک (SNI رو به سایت مجاز عوض کن)
-  const targetUrl = `https://www.google.com${url.pathname}${url.search}`; // می‌تونی به digikala.com تغییر بدی
+  // پروکسی ترافیک
+  const targetUrl = `https://www.google.com${url.pathname}${url.search}`;
   const newReq = new Request(targetUrl, {
     method: req.method,
     headers: req.headers,
@@ -21,8 +20,8 @@ Deno.serve((req: Request) => {
     redirect: "follow",
   });
 
-  newReq.headers.set("Host", "www.google.com"); // SNI واقعی
-  newReq.headers.set("X-Forwarded-For", "1.1.1.1"); // مخفی کردن IP
+  newReq.headers.set("Host", "www.google.com");
+  newReq.headers.set("X-Forwarded-For", "1.1.1.1");
 
   return fetch(newReq);
 });
