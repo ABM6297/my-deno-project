@@ -1,20 +1,19 @@
 Deno.serve((req: Request) => {
   const url = new URL(req.url);
 
-  // UUID خودت رو اینجا بگذار (از uuidgenerator.net بگیر)
-  const uuid = "51c18d3e-7513-488b-b168-de11dd5937f1";
+  // UUID خودت رو اینجا تغییر بده (از uuidgenerator.net بگیر)
+  const uuid = "51c18d3e-7513-488b-b168-de11dd5937f1"; // این رو عوض کن
 
-  // مسیر دلخواه (می‌تونی عوض کنی)
+  // مسیر دلخواه (می‌تونی تغییر بدی)
   const path = "/vless";
 
   if (url.pathname === path) {
-    // لینک کانفیگ VLESS رو برگردون
     const config = `vless://${uuid}@${url.host}:443?encryption=none&security=tls&type=ws&path=%2F${path}&host=${url.host}#My-Deno-VLESS`;
     return new Response(config, { status: 200 });
   }
 
   // پروکسی ترافیک (SNI رو به سایت مجاز عوض کن)
-  const targetUrl = `https://www.google.com${url.pathname}${url.search}`; // یا digikala.com
+  const targetUrl = `https://www.google.com${url.pathname}${url.search}`; // می‌تونی به digikala.com تغییر بدی
   const newReq = new Request(targetUrl, {
     method: req.method,
     headers: req.headers,
